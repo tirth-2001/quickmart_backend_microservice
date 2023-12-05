@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-bff-service-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order-bff-service
+  template:
+    metadata:
+      labels:
+        app: order-bff-service
+    spec:
+      containers:
+        - name: order-bff-service-container
+          image: gcr.io/micro-services-406818/quickmart-order-bff-service:v1
+          ports:
+            - containerPort: 5002
+          env:
+            - name: PORT # Name of the environment variable in your app
+              value: '5002'
+            - name: SERVICE_NAME
+              value: 'order-bff-service'

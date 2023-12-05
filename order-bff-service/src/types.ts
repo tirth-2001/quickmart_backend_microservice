@@ -1,6 +1,6 @@
 import { Request } from 'express'
-import { UserData } from './@entity'
+import { OrderData } from './@entity'
 
 export interface RequestInfo extends Request {
-  user?: UserData | null
+  user?: OrderData | null
 }

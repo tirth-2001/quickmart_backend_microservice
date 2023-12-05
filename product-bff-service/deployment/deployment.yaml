@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: product-bff-service-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: product-bff-service
+  template:
+    metadata:
+      labels:
+        app: product-bff-service
+    spec:
+      containers:
+        - name: product-bff-service-container
+          image: gcr.io/micro-services-406818/quickmart-product-bff-service:v1
+          ports:
+            - containerPort: 5003
+          env:
+            - name: PORT # Name of the environment variable in your app
+              value: '5003'
+            - name: SERVICE_NAME
+              value: 'product-bff-service'
