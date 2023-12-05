@@ -1,1 +1,1 @@
-export * as TimeUtils from './timeUtils'
+export * from './time'
