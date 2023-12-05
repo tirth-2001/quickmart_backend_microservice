@@ -13,4 +13,6 @@ const Config = {
   SERVICE_NAME: process.env.SERVICE_NAME || '',
 }
 
+console.log('CONFIG LOADED...', Config)
+
 export default Config
