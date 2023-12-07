@@ -4,8 +4,8 @@ import cors from 'cors'
 // Router files & Local Middlewares
 import { generalRouter, userRouter } from './routes'
 
-import { errorHandler } from './middlewares'
 import Config from './config'
+import { errorHandler as sharedErrorHandler } from 'quickmart-shared-service'
 
 // Instatiate Express App
 const app = express()
@@ -30,14 +30,8 @@ app.use((req, res, _next) => {
   })
 })
 
-// Global error handler middleware
-app.use((err: Error, _req: Request, res: Response, _next: any): void => {
-  console.error(err.stack)
-  res.status(500).json({ success: false, message: `Internal server error. ${err.message}` })
-})
-
 // Custom Error Handler
-app.use(errorHandler)
+app.use(sharedErrorHandler)
 
 app.listen(port, () => {
   console.log(`${serviceName} running on port : ${port}`)

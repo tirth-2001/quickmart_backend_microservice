@@ -1,17 +1,22 @@
-import { asyncHandler } from '../../middlewares'
-import { UserData, UserPayload } from '../../@entity'
+import { asyncRequestHandler } from 'quickmart-shared-service'
+import { UserPayload } from '../../@entity'
+import { UserCoreClient } from '../../client'
+import { ErrorResponse } from '../../utils'
 
-export const getUsers = asyncHandler(async (req, res, next) => {
-  //TODO: Call CORE client for getting Users
-  const results: UserData[] = []
+export const getUsers = asyncRequestHandler(async (req, res, next) => {
+  const results = await UserCoreClient.getAllUsers()
 
-  res.status(200).json(results)
+  res.status(200).json({
+    success: true,
+    message: 'Users fetched Successfully',
+    data: results,
+  })
 })
 
-export const createUser = asyncHandler(async (req, res, next) => {
+export const createUser = asyncRequestHandler(async (req, res, next) => {
   const createUserPayload: UserPayload = { ...req.body }
 
-  const user: Partial<UserData> = {}
+  const user = await UserCoreClient.createUser(createUserPayload)
 
   res.status(201).json({
     success: true,
