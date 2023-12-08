@@ -11,7 +11,7 @@ jobs:
 
     strategy:
       matrix:
-        service: [user-bff-service, user-core-service]
+        service: [user-bff-service]
 
     steps:
       - name: Checkout Repository
