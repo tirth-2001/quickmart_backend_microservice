@@ -1,7 +1,6 @@
 import { asyncRequestHandler } from 'quickmart-shared-service'
 import { UserPayload } from '../../@entity'
 import { UserCoreClient } from '../../client'
-import { ErrorResponse } from '../../utils'
 
 export const getUsers = asyncRequestHandler(async (req, res, next) => {
   const results = await UserCoreClient.getAllUsers()

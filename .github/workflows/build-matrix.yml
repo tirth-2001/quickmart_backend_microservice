@@ -22,17 +22,15 @@ jobs:
           echo "Before SHA: ${{ github.event.before }}"
           echo "After SHA: ${{ github.sha }}"
 
-      - name: Determine Changed Folders dummy
-        id: changed_folders1
-        run: |
-          git log
-          git fetch --prune --unshallow
-          CHANGED_FOLDERS=$(git diff --name-only 4392f51516e50cbcc3fc9b1e3068ae593397704c d4782c52f814bfea51a83f819cfd16f5bea1bba9 | grep -oE '^(\w+-\w+)-' | sort -u)
-          echo "CHANGED_FOLDERS=${CHANGED_FOLDERS}" >> $GITHUB_ENV
+      - name: Debug Git Log
+        run: git log --oneline --decorate --graph -n 10
 
       - name: Determine Changed Folders
         id: changed_folders
-        run: echo "CHANGED_FOLDERS=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | awk -F'/' '{print $1}' | sort -u)" >> $GITHUB_ENV
+        run: |
+          git fetch --prune --unshallow
+          CHANGED_FOLDERS=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | awk -F'/' '{print $1}' | sort -u)
+          echo "CHANGED_FOLDERS=${CHANGED_FOLDERS}" >> $GITHUB_ENV
 
       - name: Debug Changed Folders
         run: echo "CHANGED_FOLDERS=${{ env.CHANGED_FOLDERS }}"
