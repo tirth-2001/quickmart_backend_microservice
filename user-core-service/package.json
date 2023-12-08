@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon src/index.ts",
+    "doppler-setup": "doppler setup --no-interactive",
+    "doppler-config": "doppler configure",
+    "start": "yarn doppler-setup && yarn doppler-config && doppler run -- nodemon src/index.ts",
+    "normal-start": "doppler run -- nodemon src/index.ts",
     "build": "rimraf build && tsc",
     "add-build": "git add build",
     "test": "echo \"Error: no test specified\" && exit 1",

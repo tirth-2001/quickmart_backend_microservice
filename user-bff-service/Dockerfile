@@ -4,6 +4,13 @@ FROM --platform=linux/amd64 node:14
 # Set the working directory in the container
 WORKDIR /usr/src/app
 
+# This will require DOPPLER_TOKEN as env variable in runtime for Doppler Authentication
+RUN apt-get update && apt-get install -y apt-transport-https ca-certificates curl gnupg && \
+  curl -sLf --retry 3 --tlsv1.2 --proto "=https" 'https://packages.doppler.com/public/cli/gpg.DE2A7741A397C129.key' | gpg --dearmor -o /usr/share/keyrings/doppler-archive-keyring.gpg && \
+  echo "deb [signed-by=/usr/share/keyrings/doppler-archive-keyring.gpg] https://packages.doppler.com/public/cli/deb/debian any-version main" | tee /etc/apt/sources.list.d/doppler-cli.list && \
+  apt-get update && \
+  apt-get -y install doppler
+
 # Copy package.json, yarn.lock, and .yarnrc files to the working directory
 COPY package.json yarn.lock ./
 
@@ -15,9 +22,6 @@ RUN yarn global add typescript ts-node
 
 # Copy the rest of the application code
 COPY . .
-
-# Build TypeScript code
-RUN yarn build
 
 # Expose the port the app runs on
 ARG PORT=5001

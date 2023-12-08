@@ -1,0 +1,3 @@
+setup:
+  - project: quickmart-user-bff
+    config: dev
