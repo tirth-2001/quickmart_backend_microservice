@@ -101,3 +101,6 @@ jobs:
 
       - name: Deploy to GKE
         run: kubectl apply -f ${{ env.SERVICE }}/deployment/deployment.yaml
+# TODO:
+# In CHANGED_FOLDERS we're getting csv like this : user-bff-service,user-core-service
+# Pending is to itegrate over this services and integrate with the matrix concept to run the steps
