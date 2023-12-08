@@ -1,4 +1,4 @@
-name: Build with Deploy
+name: Build and Deploy Matrix
 
 on:
   push:
@@ -36,7 +36,7 @@ jobs:
         run: echo "SERVICE=${{ env.CHANGED_SERVICES }}" >> $GITHUB_ENV
 
       - name: Debug Filtered Matrix
-        run: echo "SERVICE=${{ matrix.service }}"
+        run: echo "SERVICE=${{ matrix.service }}" >> $GITHUB_ENV
 
       - name: Authenticate with Google Cloud
         uses: 'google-github-actions/auth@v1'
@@ -75,6 +75,9 @@ jobs:
 
       - name: Debug unique tag
         run: echo "TAG is ${{ env.TAG }}"
+
+      - name: Debug SERVICE env
+        run: echo "SERVICE is ${{ env.SERVICE }}"
 
       - name: Replace TAG placeholder
         run: sed -i "s|\$_TAG|${{ env.TAG }}|g" ${{ env.SERVICE }}/delployment/cloudbuild.yaml
