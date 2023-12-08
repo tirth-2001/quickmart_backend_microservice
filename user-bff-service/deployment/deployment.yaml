@@ -12,6 +12,7 @@ spec:
       labels:
         app: user-bff-service
         pod-template-hash: $_TAG
+        commit-hash: $_TAG
     spec:
       containers:
         - name: user-bff-service-container
