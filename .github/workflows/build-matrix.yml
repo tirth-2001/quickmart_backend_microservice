@@ -80,7 +80,7 @@ jobs:
         run: echo "SERVICE is ${{ env.SERVICE }}"
 
       - name: Replace TAG placeholder
-        run: sed -i "s|\$_TAG|${{ env.TAG }}|g" ${{ env.SERVICE }}/delployment/cloudbuild.yaml
+        run: sed -i "s|\$_TAG|${{ env.TAG }}|g" ${{ env.SERVICE }}/deployment/cloudbuild.yaml
 
       - name: Build and Push Docker Image
         run: gcloud builds submit --config ${{ env.SERVICE }}/deployment/cloudbuild.yaml ${{ env.SERVICE }} --suppress-logs
