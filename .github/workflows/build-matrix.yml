@@ -29,7 +29,7 @@ jobs:
         id: changed_folders
         run: |
           git fetch --prune --unshallow
-          CHANGED_FOLDERS=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -v '^\.github/' | awk -F'/' '{print $1}' | sort -u)
+          CHANGED_FOLDERS=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -v '^\.github/' | awk -F'/' '{print $1}' | sort -u | tr '\n' ',' | sed 's/,$//')
           echo "CHANGED_FOLDERS=${CHANGED_FOLDERS}" >> $GITHUB_ENV
 
       - name: Debug Changed Folders
