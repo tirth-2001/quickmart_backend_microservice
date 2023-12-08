@@ -23,7 +23,7 @@ RUN yarn global add typescript ts-node
 COPY . .
 
 # Expose the port the app runs on
-ARG PORT=5001
+ARG PORT=6001
 EXPOSE ${PORT}
 
 # Start the application using nodemon and dynamically set the port

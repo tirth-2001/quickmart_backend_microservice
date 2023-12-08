@@ -30,3 +30,7 @@ kubectl get secret/doppler-secret -o json
 ```
 kubectl get secret/doppler-secret -o jsonpath="{.data.doppler-token}" | base64 --decode
 ```
+
+## Trigger new deployment when no changes in the deployment.yaml file
+
+kubectl rollout restart deployment user-bff-service-deployment

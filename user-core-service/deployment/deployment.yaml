@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-core-service-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-core-service
+  template:
+    metadata:
+      labels:
+        app: user-core-service
+    spec:
+      containers:
+        - name: user-core-service-container
+          image: gcr.io/micro-services-406818/quickmart-user-core-service:v2
+          ports:
+            - containerPort: 6001
+          env:
+            - name: DOPPLER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: doppler-secret
+                  key: doppler-token
