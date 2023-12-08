@@ -1,0 +1,89 @@
+name: Build with Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        service: [user-bff-service, user-core-service]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Determine Changed Folders
+        id: changed_folders
+        run: echo "CHANGED_FOLDERS=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -oE '^(\w+-\w+)-' | sort -u)" >> $GITHUB_ENV
+
+      - name: Debug Changed Folders
+        run: echo "CHANGED_FOLDERS=${{ env.CHANGED_FOLDERS }}"
+
+      - name: Extract Changed Services
+        id: extract_services
+        run: echo "CHANGED_SERVICES=$(echo ${{ env.CHANGED_FOLDERS }} | tr ' ' '\n' | cut -d'-' -f1 | sort -u)" >> $GITHUB_ENV
+
+      - name: Debug Changed Services
+        run: echo "CHANGED_SERVICES=${{ env.CHANGED_SERVICES }}"
+
+      - name: Filter Matrix
+        id: filter_matrix
+        run: echo "SERVICE=${{ env.CHANGED_SERVICES }}" >> $GITHUB_ENV
+
+      - name: Debug Filtered Matrix
+        run: echo "SERVICE=${{ matrix.service }}"
+
+      - name: Authenticate with Google Cloud
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GCP_SA_KEY }}'
+
+      - name: Set up Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+        with:
+          version: '>= 363.0.0'
+          project_id: ${{ secrets.GCP_PROJECT_ID }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
+
+      - name: Setup GKE auth
+        uses: simenandre/setup-gke-gcloud-auth-plugin@v1
+
+      - name: Get GKE Credentials
+        uses: google-github-actions/get-gke-credentials@v1
+        with:
+          cluster_name: ${{ secrets.GCP_K8_CLUSTER }}
+          location: ${{ secrets.GCP_K8_REGION }}
+
+      - name: Debug kubectl config
+        run: kubectl config view
+
+      - name: Debug kubectl context
+        run: kubectl config current-context
+
+      - name: Check workspace contents
+        run: ls
+
+      - name: Generate Unique Image Tag
+        id: tag
+        run: echo "TAG=$(git rev-parse --short $GITHUB_SHA)" >> $GITHUB_ENV
+
+      - name: Debug unique tag
+        run: echo "TAG is ${{ env.TAG }}"
+
+      - name: Replace TAG placeholder
+        run: sed -i "s|\$_TAG|${{ env.TAG }}|g" ${{ env.SERVICE }}/delployment/cloudbuild.yaml
+
+      - name: Build and Push Docker Image
+        run: gcloud builds submit --config ${{ env.SERVICE }}/deployment/cloudbuild.yaml ${{ env.SERVICE }} --suppress-logs
+
+      - name: Replace TAG placeholder
+        run: sed -i "s|\$_TAG|${{ env.TAG }}|g" ${{ env.SERVICE }}/deployment/deployment.yaml
+
+      - name: Deploy to GKE
+        run: kubectl apply -f ${{ env.SERVICE }}/deployment/deployment.yaml
