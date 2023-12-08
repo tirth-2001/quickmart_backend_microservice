@@ -1,0 +1,7 @@
+steps:
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/micro-services-406818/quickmart-user-bff-service:$_TAG', '.']
+images:
+  - 'gcr.io/micro-services-406818/quickmart-user-bff-service:$_TAG'
+options:
+  logging: CLOUD_LOGGING_ONLY
