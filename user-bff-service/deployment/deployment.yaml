@@ -14,11 +14,12 @@ spec:
     spec:
       containers:
         - name: user-bff-service-container
-          image: gcr.io/micro-services-406818/quickmart-user-bff-service:v2
+          image: gcr.io/micro-services-406818/quickmart-user-bff-service:v5
           ports:
             - containerPort: 5001
           env:
-            - name: PORT # Name of the environment variable in your app
-              value: '5001'
-            - name: SERVICE_NAME
-              value: 'user-bff-service'
+            - name: DOPPLER_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: doppler-secret
+                  key: doppler-token
