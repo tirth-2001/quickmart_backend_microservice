@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: user-bff-service-container
-          image: gcr.io/micro-services-406818/quickmart-user-bff-service:v5
+          image: gcr.io/micro-services-406818/quickmart-user-bff-service:$_TAG
           ports:
             - containerPort: 5001
           env:

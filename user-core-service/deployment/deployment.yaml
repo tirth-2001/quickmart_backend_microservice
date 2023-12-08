@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: user-core-service-container
-          image: gcr.io/micro-services-406818/quickmart-user-core-service:v2
+          image: gcr.io/micro-services-406818/quickmart-user-core-service:$_TAG
           ports:
             - containerPort: 6001
           env:
