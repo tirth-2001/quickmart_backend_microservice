@@ -1,4 +1,4 @@
-import express, { Request, Response } from 'express'
+import express from 'express'
 import cors from 'cors'
 import { errorHandler as sharedErrorHandler } from 'quickmart-shared-service'
 
@@ -9,7 +9,7 @@ import Config from './config'
 
 // Instatiate Express App
 const app = express()
-const port = '5001'
+const port = Config.PORT
 const serviceName = Config.SERVICE_NAME
 
 app.use(express.json())

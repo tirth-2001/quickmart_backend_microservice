@@ -17,9 +17,14 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
+      - name: Debug Git Event
+        run: |
+          echo "Before SHA: ${{ github.event.before }}"
+          echo "After SHA: ${{ github.sha }}"
+
       - name: Determine Changed Folders
         id: changed_folders
-        run: echo "CHANGED_FOLDERS=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -oE '^(\w+-\w+)-' | sort -u)" >> $GITHUB_ENV
+        run: echo "CHANGED_FOLDERS=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | awk -F'/' '{print $1}' | sort -u)" >> $GITHUB_ENV
 
       - name: Debug Changed Folders
         run: echo "CHANGED_FOLDERS=${{ env.CHANGED_FOLDERS }}"
@@ -33,7 +38,7 @@ jobs:
 
       - name: Filter Matrix
         id: filter_matrix
-        run: echo "SERVICE=${{ env.CHANGED_SERVICES }}" >> $GITHUB_ENV
+        run: echo "SERVICE=${{ env.CHANGED_FOLDERS }}" >> $GITHUB_ENV
 
       - name: Debug Filtered Matrix
         run: echo "SERVICE=${{ matrix.service }}" >> $GITHUB_ENV
