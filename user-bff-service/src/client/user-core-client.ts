@@ -8,6 +8,10 @@ export const getAllUsers = async () => {
   return userCoreServiceClient.post<UserData[]>('/getUsers')
 }
 
+export const getUserById = async (data: UserPayload) => {
+  return userCoreServiceClient.post<UserData>('/getUserById', data)
+}
+
 export const createUser = async (userPayload: UserPayload) => {
   return userCoreServiceClient.post<UserData>('/createUser', userPayload)
 }
