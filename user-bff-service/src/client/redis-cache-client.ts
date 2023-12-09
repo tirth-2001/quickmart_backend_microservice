@@ -4,11 +4,23 @@ import { Redis } from 'ioredis'
 import Config from '../config'
 
 const redisHost = Config.NODE_ENV === 'development' ? 'localhost' : 'redis-service'
-console.log('redisHost', redisHost)
+console.log('[REDIS] redisHost', redisHost)
 
-const redis = new Redis({
-  host: Config.NODE_ENV === 'development' ? 'localhost' : 'redis-service', // Kubernetes service name
+let redis: Redis
+
+redis = new Redis({
+  host: redisHost,
   port: 6379,
+  connectTimeout: 5000, // Adjust timeout as needed
+})
+
+redis.on('connect', () => {
+  console.log('[REDIS] Connected to Redis successfully')
+})
+
+redis.on('error', (error) => {
+  console.error('[REDIS] Error connecting to Redis:', error.message)
+  throw new Error('[REDIS] Error connecting to Redis : ' + error.message)
 })
 
 const redisCacheClient = new CacheClient(redis) // pass the redis client in constructor
