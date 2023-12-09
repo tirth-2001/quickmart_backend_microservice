@@ -28,19 +28,19 @@ export const getUserById = asyncRequestHandler(async (req, res, next) => {
       message: 'User fetched successfully by cache',
       data: cachedData,
     })
+  } else {
+    const result = await UserCoreClient.getUserById({ id })
+
+    if (!result) throw new ErrorResponse('User not found with given ID', 404)
+
+    await RedisCacheClient.setUserById(id, result)
+
+    res.status(200).json({
+      success: true,
+      message: 'User fetched Successfully',
+      data: result,
+    })
   }
-
-  const result = await UserCoreClient.getUserById({ id })
-
-  if (!result) throw new ErrorResponse('User not found with given ID', 404)
-
-  await RedisCacheClient.setUserById(id, result)
-
-  res.status(200).json({
-    success: true,
-    message: 'User fetched Successfully',
-    data: result,
-  })
 })
 
 export const createUser = asyncRequestHandler(async (req, res, next) => {
