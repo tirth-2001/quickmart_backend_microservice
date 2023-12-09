@@ -1,6 +1,6 @@
 {
   "name": "quickmart-shared-service",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "NPM package to manage shared service of Microservice backend",
   "repository": "https://github.com/tirth-2001/quickmart_backend_microservice.git",
   "author": "Tirth Patel <tirthgpatel.27@gmail.com>",
