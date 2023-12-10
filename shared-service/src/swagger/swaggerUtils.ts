@@ -6,7 +6,7 @@ import { swaggerConfig } from './swaggerConfig'
 export function generateSwaggerDocument(app: Express) {
   const options = {
     ...swaggerConfig,
-    apis: ['./routes/*.ts'], // Adjust this based on your project structure
+    apis: ['./src/routes/*.ts'], // Adjust this based on your project structure
   }
 
   const swaggerSpec = swaggerJsdoc(options)
