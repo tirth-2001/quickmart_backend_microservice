@@ -6,28 +6,28 @@ import Config from '../config'
 const redisHost = Config.NODE_ENV === 'development' ? 'localhost' : 'redis-service'
 console.log('[REDIS] redisHost', redisHost)
 
-let redis: any = undefined
+let redis: Redis
 
-// function initializeRedis() {
-//   redis = new Redis({
-//     host: redisHost,
-//     port: 6379,
-//     connectTimeout: 5000, // Adjust timeout as needed
-//   })
+function initializeRedis() {
+  redis = new Redis({
+    host: redisHost,
+    port: 6379,
+    connectTimeout: 5000, // Adjust timeout as needed
+  })
 
-//   redis.on('connect', () => {
-//     console.log('[REDIS] Connected to Redis successfully')
-//   })
+  redis.on('connect', () => {
+    console.log('[REDIS] Connected to Redis successfully')
+  })
 
-//   redis.on('error', (error) => {
-//     console.error('[REDIS] Error connecting to Redis:', error.message)
-//     throw new Error('[REDIS] Error connecting to Redis : ' + error.message)
-//   })
+  redis.on('error', (error) => {
+    console.error('[REDIS] Error connecting to Redis:', error.message)
+    throw new Error('[REDIS] Error connecting to Redis : ' + error.message)
+  })
 
-//   return redis
-// }
+  return redis
+}
 
-const redisCacheClient = new CacheClient(redis as Redis) // pass the redis client in constructor
+const redisCacheClient = new CacheClient(initializeRedis()) // pass the redis client in constructor
 
 export const getUserById = async (id: string) => {
   const ID = `user:${id}`

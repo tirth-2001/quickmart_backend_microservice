@@ -1,6 +1,6 @@
 import { asyncRequestHandler } from 'quickmart-shared-service'
 import { UserPayload } from '../../@entity'
-import { UserCoreClient } from '../../client'
+import { RedisCacheClient, UserCoreClient } from '../../client'
 import { ErrorResponse } from '../../utils'
 
 export const getUsers = asyncRequestHandler(async (req, res, next) => {
@@ -18,29 +18,29 @@ export const getUserById = asyncRequestHandler(async (req, res, next) => {
 
   if (!id) throw new ErrorResponse('id is mandatory', 400)
 
-  // const cachedData = await RedisCacheClient.getUserById(id)
+  const cachedData = await RedisCacheClient.getUserById(id)
 
-  // console.log('BFF cached data', cachedData)
+  console.log('BFF cached data', cachedData)
 
-  // if (cachedData) {
-  //   res.status(200).json({
-  //     success: true,
-  //     message: 'User fetched successfully by cache',
-  //     data: cachedData,
-  //   })
-  // } else {
-  const result = await UserCoreClient.getUserById({ id })
+  if (cachedData) {
+    res.status(200).json({
+      success: true,
+      message: 'User fetched successfully by cache',
+      data: cachedData,
+    })
+  } else {
+    const result = await UserCoreClient.getUserById({ id })
 
-  if (!result) throw new ErrorResponse('User not found with given ID', 404)
+    if (!result) throw new ErrorResponse('User not found with given ID', 404)
 
-  // await RedisCacheClient.setUserById(id, result)
+    await RedisCacheClient.setUserById(id, result)
 
-  res.status(200).json({
-    success: true,
-    message: 'User fetched Successfully',
-    data: result,
-  })
-  // }
+    res.status(200).json({
+      success: true,
+      message: 'User fetched Successfully',
+      data: result,
+    })
+  }
 })
 
 export const createUser = asyncRequestHandler(async (req, res, next) => {
