@@ -1,6 +1,6 @@
 import express from 'express'
 import cors from 'cors'
-import { errorHandler as sharedErrorHandler } from 'quickmart-shared-service'
+import { generateSwaggerDocument, errorHandler as sharedErrorHandler } from 'quickmart-shared-service'
 
 // Router files & Local Middlewares
 import { generalRouter, userRouter } from './routes'
@@ -21,6 +21,9 @@ app.use(cors())
 // Router
 app.use('/', generalRouter)
 app.use('/api/user', userRouter)
+
+// Swagger API Documentation
+generateSwaggerDocument(app)
 
 app.use((req, res, _next) => {
   const endpoint = req.url

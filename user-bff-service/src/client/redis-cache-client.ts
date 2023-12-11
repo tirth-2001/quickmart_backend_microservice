@@ -8,22 +8,26 @@ console.log('[REDIS] redisHost', redisHost)
 
 let redis: Redis
 
-redis = new Redis({
-  host: redisHost,
-  port: 6379,
-  connectTimeout: 5000, // Adjust timeout as needed
-})
+function initializeRedis() {
+  redis = new Redis({
+    host: redisHost,
+    port: 6379,
+    connectTimeout: 5000, // Adjust timeout as needed
+  })
 
-redis.on('connect', () => {
-  console.log('[REDIS] Connected to Redis successfully')
-})
+  redis.on('connect', () => {
+    console.log('[REDIS] Connected to Redis successfully')
+  })
 
-redis.on('error', (error) => {
-  console.error('[REDIS] Error connecting to Redis:', error.message)
-  throw new Error('[REDIS] Error connecting to Redis : ' + error.message)
-})
+  redis.on('error', (error) => {
+    console.error('[REDIS] Error connecting to Redis:', error.message)
+    throw new Error('[REDIS] Error connecting to Redis : ' + error.message)
+  })
 
-const redisCacheClient = new CacheClient(redis) // pass the redis client in constructor
+  return redis
+}
+
+const redisCacheClient = new CacheClient(initializeRedis()) // pass the redis client in constructor
 
 export const getUserById = async (id: string) => {
   const ID = `user:${id}`

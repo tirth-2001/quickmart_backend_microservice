@@ -75,6 +75,6 @@
     "express": "^4.17.1",
     "ioredis": "^5.3.2",
     "nodemon": "^2.0.22",
-    "quickmart-shared-service": "1.0.3"
+    "quickmart-shared-service": "1.0.7"
   }
 }

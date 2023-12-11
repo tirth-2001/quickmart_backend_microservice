@@ -7,10 +7,30 @@ const router = Router()
 
 const serviceName = Config.SERVICE_NAME
 
+/**
+ * @openapi
+ * /:
+ *   get:
+ *     tags:
+ *      - general
+ *     description: Welcome to user-bff-service!
+ *     responses:
+ *       200:
+ *         description: Returns a hello message.
+ */
 router.get('/', (_req, res) => {
   res.send(`Hello from ${serviceName}`)
 })
 
+/**
+ * @openapi
+ * /ping:
+ *   get:
+ *     description: Ping
+ *     responses:
+ *       200:
+ *         description: Returns pong.
+ */
 router.get('/ping', (_req, res) => {
   res.send('Pong 🏓')
 })
