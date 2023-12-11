@@ -3,7 +3,7 @@ import cors from 'cors'
 import { generateSwaggerDocument, errorHandler as sharedErrorHandler } from 'quickmart-shared-service'
 
 // Router files & Local Middlewares
-import { generalRouter, userRouter } from './routes'
+import { coreRouter } from './routes'
 
 import Config from './config'
 
@@ -11,6 +11,7 @@ import Config from './config'
 const app = express()
 const port = Config.PORT
 const serviceName = Config.SERVICE_NAME
+const contextPath = 'user-bff'
 
 app.use(express.json())
 app.use(cors())
@@ -19,8 +20,7 @@ app.use(cors())
 app.use(cors())
 
 // Router
-app.use('/', generalRouter)
-app.use('/api/user', userRouter)
+app.use(`/${contextPath}`, coreRouter)
 
 // Swagger API Documentation
 generateSwaggerDocument(app)
