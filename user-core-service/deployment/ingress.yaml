@@ -1,0 +1,16 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: user-core-ingress
+spec:
+  rules:
+    - host: api.thewebmate.in
+      http:
+        paths:
+          - path: /user-core
+            pathType: Prefix
+            backend:
+              service:
+                name: user-core-service
+                port:
+                  number: 80
